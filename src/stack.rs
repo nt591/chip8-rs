@@ -17,6 +17,17 @@ impl Stack {
             Ok(())
         }
     }
+
+    fn pop(&mut self) -> Result<u16, &str> {
+        // todo: encode errors as types?
+        if self.sp == 0 {
+            Err("Empty stack")
+        } else {
+            let tmp = self.stack[self.sp - 1];
+            self.sp -= 1;
+            Ok(tmp)
+        }
+    }
 }
 
 #[cfg(test)]
@@ -34,5 +45,21 @@ mod tests {
             stack.push(1).is_err(),
             "Expected error when pushing more than 16 2-byte entries"
         )
+    }
+
+    #[test]
+    fn test_pop_should_err_if_empty() {
+        let mut stack = Stack::default();
+        assert!(
+            stack.pop().is_err(),
+            "Expected error when popping empty stack"
+        )
+    }
+
+    #[test]
+    fn test_pop() {
+        let mut stack = Stack::default();
+        stack.push(1).unwrap();
+        assert_eq!(stack.pop(), Ok(1))
     }
 }
